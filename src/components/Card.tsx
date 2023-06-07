@@ -1,6 +1,5 @@
-import { BsFillStarFill, BsHeartFill } from "react-icons/bs";
+import { BsFillStarFill } from "react-icons/bs";
 import { FC, ReactNode } from "react";
-import { Link } from "react-router-dom";
 
 interface PropsTableOffice {
   rate: string;

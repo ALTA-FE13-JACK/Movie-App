@@ -1,7 +1,7 @@
 import { Card } from "@/components/Card";
 import { Layout } from "@/components/Layout";
-import { BsFillStarFill, BsHeartFill } from "react-icons/bs";
-import React, { Component } from "react";
+import { BsHeartFill } from "react-icons/bs";
+import { Component } from "react";
 import { ButtonGold } from "@/components/Button";
 import { Link } from "react-router-dom";
 
