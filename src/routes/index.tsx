@@ -5,6 +5,8 @@ import Home from "@/pages";
 import { Popular } from "@/pages/Popular";
 import { Upcoming } from "@/pages/Upcoming";
 import { NowPlaying } from "@/pages/NowPlaying";
+import { Details } from "@/pages/Details";
+import { Favorite } from "@/pages/Favorite";
 
 const Routes: FC = () => {
   const router = createBrowserRouter([
@@ -23,6 +25,14 @@ const Routes: FC = () => {
     {
       path: "/now-playing",
       element: <NowPlaying />,
+    },
+    {
+      path: "/details",
+      element: <Details />,
+    },
+    {
+      path: "/favorite",
+      element: <Favorite />,
     },
   ]);
 

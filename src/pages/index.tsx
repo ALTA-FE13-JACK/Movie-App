@@ -12,7 +12,7 @@ export class Home extends Component {
         <div className="bg-@Gold2 p-2 md:p-5 h-fit w-full ">
           <div className="md:ml-10 md:mr-10">
             <h1 className="font-bold text-@Red text-2xl">Popular</h1>
-            <div className="carousel carousel-center max-w-full  p-4 space-x-4 max-h-70  dark:bg-@Black ">
+            <div className="carousel w-full  p-4 space-x-4 max-h-70  dark:bg-@Black rounded-box">
               <div className="carousel-item gap-4">
                 <Card
                   rate="7.8"

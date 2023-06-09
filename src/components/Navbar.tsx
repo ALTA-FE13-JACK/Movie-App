@@ -1,7 +1,8 @@
 import { Input } from "@/components/Input";
-import { BiSearchAlt } from "react-icons/bi";
+import { BiLogOut, BiSearchAlt, BiUserCircle } from "react-icons/bi";
 import { Component } from "react";
 import { Link } from "react-router-dom";
+import { BsFillBookmarkHeartFill } from "react-icons/bs";
 
 export class Navbar extends Component {
   render() {
@@ -37,16 +38,23 @@ export class Navbar extends Component {
                 className="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
               >
                 <li>
-                  <a className="justify-between">
-                    Profile
-                    <span className="badge">New</span>
+                  <a className="justify-start">
+                    <BiUserCircle /> Profile
+                    <span className="badge text-@Gold bg-@Black">New</span>
                   </a>
                 </li>
                 <li>
-                  <a>Settings</a>
+                  <Link to={"/favorite"}>
+                    <a className="flex justify-start items-center gap-2">
+                      <BsFillBookmarkHeartFill />
+                      Favorite
+                    </a>
+                  </Link>
                 </li>
                 <li>
-                  <a>Logout</a>
+                  <a>
+                    <BiLogOut /> Logout
+                  </a>
                 </li>
               </ul>
             </div>
