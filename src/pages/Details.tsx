@@ -1,105 +1,111 @@
-import { Card, CardDetail } from "@/components/Card";
-import { Layout } from "@/components/Layout";
+import { useNavigate, useParams } from "react-router-dom";
+import { FC, useState, useEffect } from "react";
 import { BsHeartFill } from "react-icons/bs";
-import { Component } from "react";
+import axios from "axios";
+
 import { ButtonBlack, ButtonGold } from "@/components/Button";
-import { Link } from "react-router-dom";
+import { DetailMovie, MoviesData } from "@/utils/user";
+import { CardDetail } from "@/components/Card";
+import { Layout } from "@/components/Layout";
+import { Carousel } from "@/components/Carousel";
 
-export class Details extends Component {
-  render() {
-    return (
-      <Layout>
-        <CardDetail
-          bg_img={`url("/img/Mario-movie-poster.jpg")`}
-          title=" The Super Mario Bros. Movie"
-          img="/img/Mario-movie-poster.jpg"
-          tagline=""
-          status="Released"
-          releas_date=" 2023-04-05"
-          genre="Animation, Family, Adventure, Fantasy, Comedy"
-          duration="92 Minutes"
-          rate="7.8"
-          popularity="5368.542"
-          overview="While working underground to fix a water main, Brooklyn
-          plumbers—and brothers—Mario and Luigi are transported down
-          a mysterious pipe and wander into a magical new world. But
-          when the brothers are separated, Mario embarks on an epic
-          quest to find Luigi."
-          favorite={<ButtonGold label="Add to Favorite" />}
-          watch={<ButtonBlack label="Watch Trailer" />}
-        />
+export const Details: FC = () => {
+  const [recomendations, setRecomendations] = useState<MoviesData[]>([]);
+  const [details, setDetails] = useState<Partial<DetailMovie>>({});
 
-        <div className="p-2 md:px-10 py-10 w-full ">
-          <div className="flex justify-between  ">
-            <h1 className="font-extrabold text-@Red text-2xl">
-              Recomendations
-            </h1>
-            <div className="pb-3">
-              <Link to={"/upcoming"}>
-                <ButtonGold label="See More" />
-              </Link>
+  const { id } = useParams();
+
+  useEffect(() => {
+    fetchDetails();
+    fetchRecommen();
+  }, []);
+
+  const fetchDetails = async () => {
+    axios
+      .get(`https://api.themoviedb.org/3/movie/${id}?&language=en-US`, {
+        headers: {
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxODc5NjcyMmM0Mjc3MmQ2Nzk0MTNmOGFiZGFhMDgyNCIsInN1YiI6IjY0N2RjYjMzMTc0OTczMDBjMTMzNjdmMCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.GAD5ZqUQfqsVehxAZoGnpqvma7sQDMaECJK7mAysOFU`,
+        },
+      })
+      .then((res) => {
+        const { data } = res;
+        setDetails(data);
+      })
+      .catch((err) => {
+        alert(err.toString());
+      });
+  };
+
+  const fetchRecommen = async () => {
+    axios
+      .get(
+        `https://api.themoviedb.org/3/movie/${id}/recommendations?language=en-US&page=1`,
+        {
+          headers: {
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxODc5NjcyMmM0Mjc3MmQ2Nzk0MTNmOGFiZGFhMDgyNCIsInN1YiI6IjY0N2RjYjMzMTc0OTczMDBjMTMzNjdmMCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.GAD5ZqUQfqsVehxAZoGnpqvma7sQDMaECJK7mAysOFU`,
+          },
+        }
+      )
+      .then((res) => {
+        const { results } = res.data;
+        setRecomendations(results);
+      })
+      .catch((err) => {
+        alert(err.toString());
+      });
+  };
+
+  function handleRecomen() {
+    window.location.reload();
+  }
+
+  return (
+    <Layout>
+      <CardDetail
+        key={details.id}
+        bg_img={`url(https://image.tmdb.org/t/p/w500${details.backdrop_path})`}
+        title={details.title}
+        img={details.poster_path}
+        tagline={details.tagline}
+        status={details.status}
+        releas_date={details.release_date}
+        genre={
+          details.genres
+            ? details.genres.map((genre: any) => genre.name).join(", ")
+            : []
+        }
+        duration={details.runtime}
+        rate={details.vote_average}
+        popularity={details.popularity}
+        overview={details.overview}
+        favorite={<ButtonGold label="Add to Favorite" />}
+        watch={<ButtonBlack label="Watch Trailer" />}
+      />
+      <div className="p-2 md:p-5 h-fit w-full ">
+        <div className="md:ml-10 md:mr-10">
+          <h1 className="font-bold text-@Red text-2xl">Recomendations</h1>
+          <div className="carousel max-w-full p-4 space-x-4 max-h-72 dark:bg-@Black rounded-box">
+            <div className="carousel-item gap-4">
+              {recomendations.length > 0 ? (
+                recomendations.map((recomen) => (
+                  <Carousel
+                    rate={recomen.vote_average}
+                    img={recomen.poster_path}
+                    title={recomen.title}
+                    detail={`/details/${recomen.id}`}
+                    favorite={<BsHeartFill />}
+                    onClick={() => handleRecomen()}
+                  />
+                ))
+              ) : (
+                <p className="font-extrabold text-xl">
+                  No recommendations available.
+                </p>
+              )}
             </div>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-8 gap-2 md:gap-4">
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-          </div>
         </div>
-      </Layout>
-    );
-  }
-}
+      </div>
+    </Layout>
+  );
+};
