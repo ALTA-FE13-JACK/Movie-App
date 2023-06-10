@@ -1,272 +1,148 @@
-import { Card } from "@/components/Card";
-import { Layout } from "@/components/Layout";
+import { FC, useEffect, useState } from "react";
 import { BsHeartFill } from "react-icons/bs";
-import { Component } from "react";
-import { ButtonGold } from "@/components/Button";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
-export class Home extends Component {
-  render() {
-    return (
-      <Layout>
-        <div className="bg-@Gold2 p-2 md:p-5 h-fit w-full ">
-          <div className="md:ml-10 md:mr-10">
-            <h1 className="font-bold text-@Red text-2xl">Popular</h1>
-            <div className="carousel w-full  p-4 space-x-4 max-h-70  dark:bg-@Black rounded-box">
-              <div className="carousel-item gap-4">
-                <Card
-                  rate="7.8"
-                  img="/img/Mario-movie-poster.jpg"
-                  title=" The Super Mario Bros. Movie"
-                  detail=""
+import { ButtonGold } from "@/components/Button";
+import { Carousel } from "@/components/Carousel";
+import { Layout } from "@/components/Layout";
+import { MoviesData } from "@/utils/user";
+import { Card } from "@/components/Card";
+
+const Home: FC = () => {
+  const [dataNowPlaying, setDataNowPlaying] = useState<MoviesData[]>([]);
+  const [dataUpcoming, setDataUpcoming] = useState<MoviesData[]>([]);
+  const [dataPopular, setDataPopular] = useState<MoviesData[]>([]);
+
+  useEffect(() => {
+    fetchNowPlaying();
+    fetchUpcoming();
+    fetchPopular();
+  }, []);
+
+  const fetchPopular = async () => {
+    axios
+      .get(`https://api.themoviedb.org/3/movie/popular?language=en-US&page=1`, {
+        headers: {
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxODc5NjcyMmM0Mjc3MmQ2Nzk0MTNmOGFiZGFhMDgyNCIsInN1YiI6IjY0N2RjYjMzMTc0OTczMDBjMTMzNjdmMCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.GAD5ZqUQfqsVehxAZoGnpqvma7sQDMaECJK7mAysOFU`,
+        },
+      })
+      .then((res) => {
+        const { results } = res.data;
+        setDataPopular(results);
+      })
+      .catch((err) => {
+        alert(err.toString());
+      });
+  };
+
+  const fetchUpcoming = async () => {
+    axios
+      .get(
+        `https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1`,
+        {
+          headers: {
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxODc5NjcyMmM0Mjc3MmQ2Nzk0MTNmOGFiZGFhMDgyNCIsInN1YiI6IjY0N2RjYjMzMTc0OTczMDBjMTMzNjdmMCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.GAD5ZqUQfqsVehxAZoGnpqvma7sQDMaECJK7mAysOFU`,
+          },
+        }
+      )
+      .then((res) => {
+        const { results } = res.data;
+        setDataUpcoming(results);
+      })
+      .catch((err) => {
+        alert(err.toString());
+      });
+  };
+
+  const fetchNowPlaying = async () => {
+    axios
+      .get(
+        `https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1`,
+        {
+          headers: {
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxODc5NjcyMmM0Mjc3MmQ2Nzk0MTNmOGFiZGFhMDgyNCIsInN1YiI6IjY0N2RjYjMzMTc0OTczMDBjMTMzNjdmMCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.GAD5ZqUQfqsVehxAZoGnpqvma7sQDMaECJK7mAysOFU`,
+          },
+        }
+      )
+      .then((res) => {
+        const { results } = res.data;
+        setDataNowPlaying(results);
+      })
+      .catch((err) => {
+        alert(err.toString());
+      });
+  };
+
+  return (
+    <Layout>
+      <div className="bg-@Gold2 p-2 md:p-5 h-fit w-full ">
+        <div className="md:ml-10 md:mr-10">
+          <h1 className="font-bold text-@Red text-2xl">Popular</h1>
+          <div className="carousel max-w-full p-4 space-x-4 max-h-72 dark:bg-@Black rounded-box">
+            <div className="carousel-item gap-4">
+              {dataPopular.map((popular) => (
+                <Carousel
+                  rate={popular.vote_average}
+                  img={popular.poster_path}
+                  title={popular.title}
+                  detail={`/details/${popular.id}`}
                   favorite={<BsHeartFill />}
                 />
-                <Card
-                  rate="7.8"
-                  img="/img/Mario-movie-poster.jpg"
-                  title=" The Super Mario Bros. Movie"
-                  detail=""
-                  favorite={<BsHeartFill />}
-                />
-                <Card
-                  rate="7.8"
-                  img="/img/Mario-movie-poster.jpg"
-                  title=" The Super Mario Bros. Movie"
-                  detail=""
-                  favorite={<BsHeartFill />}
-                />
-                <Card
-                  rate="7.8"
-                  img="/img/Mario-movie-poster.jpg"
-                  title=" The Super Mario Bros. Movie"
-                  detail=""
-                  favorite={<BsHeartFill />}
-                />
-                <Card
-                  rate="7.8"
-                  img="/img/Mario-movie-poster.jpg"
-                  title=" The Super Mario Bros. Movie"
-                  detail=""
-                  favorite={<BsHeartFill />}
-                />
-                <Card
-                  rate="7.8"
-                  img="/img/Mario-movie-poster.jpg"
-                  title=" The Super Mario Bros. Movie"
-                  detail=""
-                  favorite={<BsHeartFill />}
-                />
-                <Card
-                  rate="7.8"
-                  img="/img/Mario-movie-poster.jpg"
-                  title=" The Super Mario Bros. Movie"
-                  detail=""
-                  favorite={<BsHeartFill />}
-                />
-                <Card
-                  rate="7.8"
-                  img="/img/Mario-movie-poster.jpg"
-                  title=" The Super Mario Bros. Movie"
-                  detail=""
-                  favorite={<BsHeartFill />}
-                />
-                <Card
-                  rate="7.8"
-                  img="/img/Mario-movie-poster.jpg"
-                  title=" The Super Mario Bros. Movie"
-                  detail=""
-                  favorite={<BsHeartFill />}
-                />
-                <Card
-                  rate="7.8"
-                  img="/img/Mario-movie-poster.jpg"
-                  title=" The Super Mario Bros. Movie"
-                  detail=""
-                  favorite={<BsHeartFill />}
-                />
-                <Card
-                  rate="7.8"
-                  img="/img/Mario-movie-poster.jpg"
-                  title=" The Super Mario Bros. Movie"
-                  detail=""
-                  favorite={<BsHeartFill />}
-                />
-                <Card
-                  rate="7.8"
-                  img="/img/Mario-movie-poster.jpg"
-                  title=" The Super Mario Bros. Movie"
-                  detail=""
-                  favorite={<BsHeartFill />}
-                />
-                <Card
-                  rate="7.8"
-                  img="/img/Mario-movie-poster.jpg"
-                  title=" The Super Mario Bros. Movie"
-                  detail=""
-                  favorite={<BsHeartFill />}
-                />
-                <Card
-                  rate="7.8"
-                  img="/img/Mario-movie-poster.jpg"
-                  title=" The Super Mario Bros. Movie"
-                  detail=""
-                  favorite={<BsHeartFill />}
-                />
-                <Card
-                  rate="7.8"
-                  img="/img/Mario-movie-poster.jpg"
-                  title=" The Super Mario Bros. Movie"
-                  detail=""
-                  favorite={<BsHeartFill />}
-                />
-              </div>
+              ))}
             </div>
-            <div className="flex justify-center">
-              <Link to={"/popular"}>
-                <ButtonGold label="Populer More" />
-              </Link>
-            </div>
+          </div>
+          <div className="flex justify-center">
+            <Link to={"/popular"}>
+              <ButtonGold label="Populer More" />
+            </Link>
           </div>
         </div>
-        <div className="p-2 md:px-10 py-10 w-full ">
-          <div className="flex justify-between  ">
-            <h1 className="font-extrabold text-@Gold text-2xl">Upcoming</h1>
-            <div className="pb-3">
-              <Link to={"/upcoming"}>
-                <ButtonGold label="See More" />
-              </Link>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-8 gap-2 md:gap-4">
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
+      </div>
+      <div className="p-2 md:px-10 py-10 w-full ">
+        <div className="flex justify-between  ">
+          <h1 className="font-extrabold text-@Gold text-2xl">Upcoming</h1>
+          <div className="pb-3">
+            <Link to={"/upcoming"}>
+              <ButtonGold label="See More" />
+            </Link>
           </div>
         </div>
-        <div className="p-2 md:p-10 w-full">
-          <div className="flex justify-between  ">
-            <h1 className="font-extrabold text-@Gold text-2xl">Now Playing</h1>
-            <div className="pb-3">
-              <Link to={"/now-playing"}>
-                <ButtonGold label="See More" />
-              </Link>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-8 gap-2 md:gap-4">
+        <div className="grid  grid-cols-2 sm:grid-cols-4  lg:grid-cols-10 gap-2">
+          {dataUpcoming.map((upcoming) => (
             <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
+              rate={upcoming.vote_average}
+              img={upcoming.poster_path}
+              title={upcoming.title}
+              detail={`/details/${upcoming.id}`}
               favorite={<BsHeartFill />}
             />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
+          ))}
+        </div>
+      </div>
+      <div className="p-2 md:p-10 w-full">
+        <div className="flex justify-between  ">
+          <h1 className="font-extrabold text-@Gold text-2xl">Now Playing</h1>
+          <div className="pb-3">
+            <Link to={"/now-playing"}>
+              <ButtonGold label="See More" />
+            </Link>
           </div>
         </div>
-      </Layout>
-    );
-  }
-}
+        <div className="grid grid-cols-2 sm:grid-cols-4  lg:grid-cols-10 gap-2 ">
+          {dataNowPlaying.map((playing) => (
+            <Card
+              rate={playing.vote_average}
+              img={playing.poster_path}
+              title={playing.title}
+              detail={`/details/${playing.id}`}
+              favorite={<BsHeartFill />}
+            />
+          ))}
+        </div>
+      </div>
+    </Layout>
+  );
+};
 
 export default Home;

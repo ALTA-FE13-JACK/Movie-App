@@ -1,136 +1,64 @@
-import { Card } from "@/components/Card";
-import { Layout } from "@/components/Layout";
+import { FC, useState, useEffect } from "react";
 import { BsHeartFill } from "react-icons/bs";
-import { Component } from "react";
-import { ButtonGold } from "@/components/Button";
+import axios from "axios";
 
-export class Popular extends Component {
-  render() {
-    return (
-      <Layout>
-        <div className="p-2 md:px-10 py-10 w-full">
-          <div className="flex justify-center items-center">
-            <h1 className="font-extrabold text-@Gold md:text-5xl">Popular</h1>
-          </div>
-          <div className="grid grid-cols-8 mt-5 gap-4">
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-            <Card
-              rate="7.8"
-              img="/img/Mario-movie-poster.jpg"
-              title=" The Super Mario Bros. Movie"
-              detail=""
-              favorite={<BsHeartFill />}
-            />
-          </div>
-          <div className="flex justify-center">
-            <ButtonGold label="Load More" />
-          </div>
-        </div>
-      </Layout>
-    );
+import { ButtonGold } from "@/components/Button";
+import { Layout } from "@/components/Layout";
+import { MoviesData } from "@/utils/user";
+import { Card } from "@/components/Card";
+
+export const Popular: FC = () => {
+  const [dataPopular, setDataPopular] = useState<MoviesData[]>([]);
+  const [page, setPage] = useState<number>(1);
+
+  useEffect(() => {
+    fetchPopular();
+  }, [page]);
+
+  const fetchPopular = async () => {
+    axios
+      .get(
+        `https://api.themoviedb.org/3/movie/popular?language=en-US&page=${page}`,
+        {
+          headers: {
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxODc5NjcyMmM0Mjc3MmQ2Nzk0MTNmOGFiZGFhMDgyNCIsInN1YiI6IjY0N2RjYjMzMTc0OTczMDBjMTMzNjdmMCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.GAD5ZqUQfqsVehxAZoGnpqvma7sQDMaECJK7mAysOFU`,
+          },
+        }
+      )
+      .then((res) => {
+        const { results, page } = res.data;
+        setDataPopular((prevData) => [...prevData, ...results]);
+        setPage(page);
+      })
+      .catch((err) => {
+        alert(err.toString());
+      });
+  };
+  function handlePage() {
+    setPage((page) => page + 1);
   }
-}
+
+  return (
+    <Layout>
+      <div className="p-2 md:px-10 py-10 w-full">
+        <div className="flex justify-center items-center">
+          <h1 className="font-extrabold text-@Gold md:text-5xl">Popular</h1>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-10 gap-2">
+          {dataPopular.map((popular) => (
+            <Card
+              rate={popular.vote_average}
+              img={popular.poster_path}
+              title={popular.title}
+              detail={`/details/${popular.id}`}
+              favorite={<BsHeartFill />}
+            />
+          ))}
+        </div>
+        <div className="flex justify-center">
+          <ButtonGold onClick={() => handlePage()} label="Load More" />
+        </div>
+      </div>
+    </Layout>
+  );
+};
