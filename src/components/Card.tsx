@@ -91,7 +91,7 @@ export const CardDetail: FC<PropsCardDetail> = (props) => {
               src={`https://image.tmdb.org/t/p/w500${img}`}
               alt={img}
             />
-            <div className="flex flex-col w-full h-16 rounded-b-md pr-2 bg-@Black opacity-80 absolute bottom-0 ">
+            <div className="flex flex-col w-full min-h-16 rounded-b-md pr-2 bg-@Black opacity-80 absolute bottom-0 ">
               <p className="pl-2 font-bold text-2xl text-@Gold text-center hover:text-@Gold">
                 {status}
               </p>
@@ -101,7 +101,7 @@ export const CardDetail: FC<PropsCardDetail> = (props) => {
             </div>
           </div>
           <div className="max-w-5xl">
-            <h1 className="font-extrabold md:text-4xl lg:text-5xl text-@Black">
+            <h1 className="font-extrabold text-4xl lg:text-5xl text-@Black">
               {title}
             </h1>
             <p className="px-2 pb-2 font-mono md:text-2xl">{tagline}</p>

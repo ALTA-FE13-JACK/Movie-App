@@ -14,4 +14,5 @@ export interface DetailMovie extends MoviesData {
   tagline: string;
   status: string;
   genres: string[];
+  homepage: string;
 }

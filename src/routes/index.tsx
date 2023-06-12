@@ -6,6 +6,7 @@ import { Favorite } from "@/pages/Favorite";
 import { Upcoming } from "@/pages/Upcoming";
 import { Popular } from "@/pages/Popular";
 import { Details } from "@/pages/Details";
+import { Search } from "@/pages/Search";
 import Home from "@/pages";
 
 const Routes: FC = () => {
@@ -33,6 +34,10 @@ const Routes: FC = () => {
     {
       path: "/favorite",
       element: <Favorite />,
+    },
+    {
+      path: "/search",
+      element: <Search />,
     },
   ]);
 

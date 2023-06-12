@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { BsHeartFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import { useCookies } from "react-cookie";
 import axios from "axios";
 
 import { ButtonGold } from "@/components/Button";
@@ -13,6 +14,8 @@ const Home: FC = () => {
   const [dataNowPlaying, setDataNowPlaying] = useState<MoviesData[]>([]);
   const [dataUpcoming, setDataUpcoming] = useState<MoviesData[]>([]);
   const [dataPopular, setDataPopular] = useState<MoviesData[]>([]);
+  const [cookie] = useCookies();
+  const token = cookie.session_id;
 
   useEffect(() => {
     fetchNowPlaying();
@@ -22,11 +25,14 @@ const Home: FC = () => {
 
   const fetchPopular = async () => {
     axios
-      .get(`https://api.themoviedb.org/3/movie/popular?language=en-US&page=1`, {
-        headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxODc5NjcyMmM0Mjc3MmQ2Nzk0MTNmOGFiZGFhMDgyNCIsInN1YiI6IjY0N2RjYjMzMTc0OTczMDBjMTMzNjdmMCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.GAD5ZqUQfqsVehxAZoGnpqvma7sQDMaECJK7mAysOFU`,
-        },
-      })
+      .get(
+        `https://api.themoviedb.org/3/movie/popular?api_key=90f9695a1eb1d3b8980e2c2898bf11bc&anguage=en-US&page=1`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((res) => {
         const { results } = res.data;
         setDataPopular(results);
@@ -39,10 +45,10 @@ const Home: FC = () => {
   const fetchUpcoming = async () => {
     axios
       .get(
-        `https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1`,
+        `https://api.themoviedb.org/3/movie/upcoming?api_key=90f9695a1eb1d3b8980e2c2898bf11bc&anguage=en-US&page=1`,
         {
           headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxODc5NjcyMmM0Mjc3MmQ2Nzk0MTNmOGFiZGFhMDgyNCIsInN1YiI6IjY0N2RjYjMzMTc0OTczMDBjMTMzNjdmMCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.GAD5ZqUQfqsVehxAZoGnpqvma7sQDMaECJK7mAysOFU`,
+            Authorization: `Bearer ${token}`,
           },
         }
       )
@@ -58,10 +64,10 @@ const Home: FC = () => {
   const fetchNowPlaying = async () => {
     axios
       .get(
-        `https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1`,
+        `https://api.themoviedb.org/3/movie/now_playing?api_key=90f9695a1eb1d3b8980e2c2898bf11bc&anguage=en-US&page=1`,
         {
           headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxODc5NjcyMmM0Mjc3MmQ2Nzk0MTNmOGFiZGFhMDgyNCIsInN1YiI6IjY0N2RjYjMzMTc0OTczMDBjMTMzNjdmMCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.GAD5ZqUQfqsVehxAZoGnpqvma7sQDMaECJK7mAysOFU`,
+            Authorization: `Bearer ${token}`,
           },
         }
       )

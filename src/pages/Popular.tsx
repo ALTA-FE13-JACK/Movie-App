@@ -1,5 +1,6 @@
 import { FC, useState, useEffect } from "react";
 import { BsHeartFill } from "react-icons/bs";
+import { useCookies } from "react-cookie";
 import axios from "axios";
 
 import { ButtonGold } from "@/components/Button";
@@ -10,6 +11,8 @@ import { Card } from "@/components/Card";
 export const Popular: FC = () => {
   const [dataPopular, setDataPopular] = useState<MoviesData[]>([]);
   const [page, setPage] = useState<number>(1);
+  const [cookie] = useCookies();
+  const token = cookie.session_id;
 
   useEffect(() => {
     fetchPopular();
@@ -18,10 +21,10 @@ export const Popular: FC = () => {
   const fetchPopular = async () => {
     axios
       .get(
-        `https://api.themoviedb.org/3/movie/popular?language=en-US&page=${page}`,
+        `https://api.themoviedb.org/3/movie/popular?api_key=90f9695a1eb1d3b8980e2c2898bf11bc&anguage=en-US&page=${page}`,
         {
           headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxODc5NjcyMmM0Mjc3MmQ2Nzk0MTNmOGFiZGFhMDgyNCIsInN1YiI6IjY0N2RjYjMzMTc0OTczMDBjMTMzNjdmMCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.GAD5ZqUQfqsVehxAZoGnpqvma7sQDMaECJK7mAysOFU`,
+            Authorization: `Bearer ${token}`,
           },
         }
       )
@@ -40,9 +43,11 @@ export const Popular: FC = () => {
 
   return (
     <Layout>
-      <div className="p-2 md:px-10 py-10 w-full">
+      <div className="p-2 md:px-10 md:py-10 w-full">
         <div className="flex justify-center items-center">
-          <h1 className="font-extrabold text-@Gold md:text-5xl">Popular</h1>
+          <h1 className="font-extrabold text-@Gold text-3xl pb-2 md:text-5xl">
+            Popular
+          </h1>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-10 gap-2">
           {dataPopular.map((popular) => (
