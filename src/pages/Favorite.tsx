@@ -1,10 +1,7 @@
 import { Card, CardFavorite } from "@/components/Card";
 import { Layout } from "@/components/Layout";
-import { BsFillStarFill } from "react-icons/bs";
-import { MdOutlineAccessTimeFilled } from "react-icons/md";
 import { Component } from "react";
 import { ButtonBlack, ButtonGold } from "@/components/Button";
-import { Link } from "react-router-dom";
 
 export class Favorite extends Component {
   render() {

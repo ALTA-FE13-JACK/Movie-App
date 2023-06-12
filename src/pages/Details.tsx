@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { FC, useState, useEffect } from "react";
 import { BsHeartFill } from "react-icons/bs";
+import { useCookies } from "react-cookie";
 import axios from "axios";
 
 import { ButtonBlack, ButtonGold } from "@/components/Button";
@@ -9,10 +10,17 @@ import { CardDetail } from "@/components/Card";
 import { Layout } from "@/components/Layout";
 import { Carousel } from "@/components/Carousel";
 
+declare global {
+  interface Window {
+    my_modal_3: HTMLDialogElement | undefined;
+  }
+}
+
 export const Details: FC = () => {
   const [recomendations, setRecomendations] = useState<MoviesData[]>([]);
   const [details, setDetails] = useState<Partial<DetailMovie>>({});
-
+  const [cookie] = useCookies();
+  const token = cookie.session_id;
   const { id } = useParams();
 
   useEffect(() => {
@@ -22,11 +30,14 @@ export const Details: FC = () => {
 
   const fetchDetails = async () => {
     axios
-      .get(`https://api.themoviedb.org/3/movie/${id}?&language=en-US`, {
-        headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxODc5NjcyMmM0Mjc3MmQ2Nzk0MTNmOGFiZGFhMDgyNCIsInN1YiI6IjY0N2RjYjMzMTc0OTczMDBjMTMzNjdmMCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.GAD5ZqUQfqsVehxAZoGnpqvma7sQDMaECJK7mAysOFU`,
-        },
-      })
+      .get(
+        `https://api.themoviedb.org/3/movie/${id}?api_key=90f9695a1eb1d3b8980e2c2898bf11bc&language=en-US`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((res) => {
         const { data } = res;
         setDetails(data);
@@ -39,10 +50,10 @@ export const Details: FC = () => {
   const fetchRecommen = async () => {
     axios
       .get(
-        `https://api.themoviedb.org/3/movie/${id}/recommendations?language=en-US&page=1`,
+        `https://api.themoviedb.org/3/movie/${id}/recommendations?api_key=90f9695a1eb1d3b8980e2c2898bf11bc&append_to_response=videos`,
         {
           headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxODc5NjcyMmM0Mjc3MmQ2Nzk0MTNmOGFiZGFhMDgyNCIsInN1YiI6IjY0N2RjYjMzMTc0OTczMDBjMTMzNjdmMCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.GAD5ZqUQfqsVehxAZoGnpqvma7sQDMaECJK7mAysOFU`,
+            Authorization: `Bearer ${token}`,
           },
         }
       )
@@ -79,8 +90,32 @@ export const Details: FC = () => {
         popularity={details.popularity}
         overview={details.overview}
         favorite={<ButtonGold label="Add to Favorite" />}
-        watch={<ButtonBlack label="Watch Trailer" />}
+        watch={
+          <ButtonBlack
+            onClick={() => window.my_modal_3?.showModal()}
+            label="Watch Trailer"
+          />
+        }
       />
+      <dialog id="my_modal_3" className="modal">
+        <form method="dialog" className="modal-box w-full max-w-6xl">
+          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+            ✕
+          </button>
+          <h3 className="font-bold text-lg">{details.title}</h3>
+          <p className="py-4">
+            <iframe
+              key={details.id}
+              height={"100%"}
+              width={"100%"}
+              src={`https://www.youtube.com/embed/${details.title}`}
+              title={details.title}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            />
+          </p>
+        </form>
+      </dialog>
+
       <div className="p-2 md:p-5 h-fit w-full ">
         <div className="md:ml-10 md:mr-10">
           <h1 className="font-bold text-@Red text-2xl">Recomendations</h1>
