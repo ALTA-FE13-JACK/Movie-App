@@ -117,7 +117,7 @@ export const CardDetail: FC<PropsCardDetail> = (props) => {
             <h1 className="px-2 font-bold md:text-2xl text-@Black">
               Popularity : {popularity}
             </h1>
-            <details className="collapse lg:hidden">
+            <details className="collapse ">
               <summary className="collapse-title font-bold md:text-2xl text-@Black">
                 Overview
               </summary>

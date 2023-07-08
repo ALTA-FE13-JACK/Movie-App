@@ -49,7 +49,7 @@ export const Popular: FC = () => {
             Popular
           </h1>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-10 gap-2">
+        <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-10 gap-2">
           {dataPopular.map((popular) => (
             <Card
               rate={popular.vote_average}

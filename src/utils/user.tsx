@@ -14,5 +14,11 @@ export interface DetailMovie extends MoviesData {
   tagline: string;
   status: string;
   genres: string[];
+  videos: number[];
   homepage: string;
+}
+export interface VideosData {
+  id: string;
+  name: string;
+  type: string;
 }

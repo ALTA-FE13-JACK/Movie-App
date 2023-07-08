@@ -5,7 +5,7 @@ import { useCookies } from "react-cookie";
 import axios from "axios";
 
 import { ButtonBlack, ButtonGold } from "@/components/Button";
-import { DetailMovie, MoviesData } from "@/utils/user";
+import { DetailMovie, MoviesData, VideosData } from "@/utils/user";
 import { CardDetail } from "@/components/Card";
 import { Layout } from "@/components/Layout";
 import { Carousel } from "@/components/Carousel";
@@ -19,6 +19,7 @@ declare global {
 export const Details: FC = () => {
   const [recomendations, setRecomendations] = useState<MoviesData[]>([]);
   const [details, setDetails] = useState<Partial<DetailMovie>>({});
+  const [video, setVideo] = useState<Partial<VideosData>>({});
   const [cookie] = useCookies();
   const token = cookie.session_id;
   const { id } = useParams();
@@ -31,7 +32,7 @@ export const Details: FC = () => {
   const fetchDetails = async () => {
     axios
       .get(
-        `https://api.themoviedb.org/3/movie/${id}?api_key=90f9695a1eb1d3b8980e2c2898bf11bc&language=en-US`,
+        `https://api.themoviedb.org/3/movie/${id}?api_key=90f9695a1eb1d3b8980e2c2898bf11bc&language=en-US&append_to_response=videos`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -40,7 +41,10 @@ export const Details: FC = () => {
       )
       .then((res) => {
         const { data } = res;
+        const videoData = data.videos.results;
         setDetails(data);
+        setVideo(videoData);
+        console.log(video);
       })
       .catch((err) => {
         alert(err.toString());
@@ -50,7 +54,7 @@ export const Details: FC = () => {
   const fetchRecommen = async () => {
     axios
       .get(
-        `https://api.themoviedb.org/3/movie/${id}/recommendations?api_key=90f9695a1eb1d3b8980e2c2898bf11bc&append_to_response=videos`,
+        `https://api.themoviedb.org/3/movie/${id}/recommendations?api_key=90f9695a1eb1d3b8980e2c2898bf11bc`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -102,10 +106,11 @@ export const Details: FC = () => {
           <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
             ✕
           </button>
-          <h3 className="font-bold text-lg">{details.title}</h3>
+
+          <h3 className="font-bold text-lg">Trailer {details.title}</h3>
           <p className="py-4">
             <iframe
-              key={details.id}
+              key={video.id}
               height={"100%"}
               width={"100%"}
               src={`https://www.youtube.com/embed/${details.title}`}

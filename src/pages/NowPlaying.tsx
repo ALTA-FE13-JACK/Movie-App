@@ -49,7 +49,7 @@ export const NowPlaying: FC = () => {
             Now Playing
           </h1>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-10 gap-2">
+        <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-10 gap-2">
           {dataNowPlaying.map((playing) => (
             <Card
               rate={playing.vote_average}
